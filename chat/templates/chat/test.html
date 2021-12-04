@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generic Api Consumer</title>
+</head>
+<body>
+
+<button id="list">List</button>
+<button id="retrieve">Retrieve</button>
+<button id="create">Create</button>
+<button id="patch">Patch</button>
+<button id="update">Update</button>
+<button id="delete">Delete</button>
+
+<pre id="response"></pre>
+
+<script>
+    const ws = new WebSocket("ws://localhost:8000/ws/?token=" + [localStorage.getItem('Token')])
+
+    ws.onmessage = function (e) {
+        document.getElementById("response").textContent = JSON.stringify(JSON.parse(e.data), undefined, 2);
+        console.log(e.data)
+    }
+
+    document.querySelector('#list').onclick = function (e) {
+        ws.send(JSON.stringify({
+            action: "list",
+            request_id: new Date().getTime()
+        }))
+    };
+
+    document.querySelector('#retrieve').onclick = function (e) {
+        ws.send(JSON.stringify({
+            action: "retrieve",
+            request_id: new Date().getTime(),
+            pk: 3
+        }))
+    }
+
+    document.querySelector('#create').onclick = function (e) {
+        ws.send(JSON.stringify({
+            action: "create",
+            request_id: new Date().getTime(),
+            data: {
+                username: "Test",
+                password: "testpsdsassword123",
+                email: "4qqqq@example.com"
+            }
+        }))
+    }
+
+    document.querySelector('#patch').onclick = function (e) {
+        ws.send(JSON.stringify({
+            action: "patch",
+            request_id: new Date().getTime(),
+            pk: 2,
+            data: {
+                email: "edited@example.com"
+            }
+        }))
+    }
+
+    document.querySelector('#update').onclick = function (e) {
+        ws.send(JSON.stringify({
+            action: "update",
+            request_id: new Date().getTime(),
+            pk: 3,
+            data: {
+                username: "WWWWWWWW"
+            }
+        }))
+    }
+
+    document.querySelector('#delete').onclick = function (e) {
+        ws.send(JSON.stringify({
+            action: "delete",
+            request_id: new Date().getTime(),
+            pk: 2
+        }))
+    }
+</script>
+</body>
+</html>
